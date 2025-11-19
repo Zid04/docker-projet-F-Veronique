@@ -1,0 +1,44 @@
+services:
+  web:
+    # declaration du service web
+    build:
+      # construction de l'image docker
+      context: ./web
+      dockerfile: Dockerfile
+    image: bandnames:dev
+    env_file:
+      - .env # charge les variables d'environnement depuis le fichier .env
+    ports:
+      - "8085:80" # mappe le port 80 du conteneur au port 8085 de l'hôte
+    depends_on:
+      - database # indique que le service web dépend du service database
+    restart: unless-stopped # redémarre automatiquement si le conteneur plante
+
+  database:
+    # declaration du service database
+    image: mysql:latest
+    environment:
+      - .env # charge les variables d'environnement depuis le fichier .env
+    volumes:
+      - db_data:/var/lib/mysql # persistance des données de la base de données
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro # script d'initialisation de la base de données
+      # pas de port expose volontairement car la base de donnees doit etre accessible uniquement par les autres services docker
+    depends_on:
+      - phpMyAdmin
+    restart: unless-stopped # redémarre automatiquement si le conteneur plante
+
+    phpmyadmin:
+      # declaration du service phpmyadmin
+      image: phpmyadmin/phpmyadmin:latest
+      environment:
+        # connexion a la base de donnees mySQL
+        PMA_HOST: database # indique l'hôte de la base de données pour phpMyAdmin
+        PMA_USER: ${MYSQL_USER} # utilise la variable d'environnement MYSQL_USER
+        PMA_PASSWORD: ${MYSQL_PASSWORD} # utilise la variable d'environnement MYSQL_PASSWORD
+      ports: "8086:80"
+      restart: unless-stopped
+volumes:
+  # est gerer automatiquement par mySQL pour stoquer les donnees de la base de donnees
+  db_data:
+
+
