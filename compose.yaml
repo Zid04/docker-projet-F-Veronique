@@ -27,16 +27,16 @@ services:
       - phpMyAdmin
     restart: unless-stopped # redémarre automatiquement si le conteneur plante
 
-    phpmyadmin:
-      # declaration du service phpmyadmin
-      image: phpmyadmin/phpmyadmin:latest
-      environment:
-        # connexion a la base de donnees mySQL
-        PMA_HOST: database # indique l'hôte de la base de données pour phpMyAdmin
-        PMA_USER: ${MYSQL_USER} # utilise la variable d'environnement MYSQL_USER
-        PMA_PASSWORD: ${MYSQL_PASSWORD} # utilise la variable d'environnement MYSQL_PASSWORD
-      ports: "8086:80"
-      restart: unless-stopped
+  phpmyadmin:
+    # declaration du service phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      # connexion a la base de donnees mySQL
+      PMA_HOST: database # indique l'hôte de la base de données pour phpMyAdmin
+      PMA_USER: ${MYSQL_USER} # utilise la variable d'environnement MYSQL_USER
+      PMA_PASSWORD: ${MYSQL_PASSWORD} # utilise la variable d'environnement MYSQL_PASSWORD
+    ports: "8086:80"
+    restart: unless-stopped
 volumes:
   # est gerer automatiquement par mySQL pour stoquer les donnees de la base de donnees
   db_data:
