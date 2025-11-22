@@ -1,5 +1,5 @@
 import express from 'express'; // importer express
-import mysql from 'mysql/promise'; // importer mysql/promise
+import mysql from 'mysql2/promise'; // importer mysql/promise
 import dotenv from 'dotenv'; // importer dotenv
 
 dotenv.config();
@@ -22,11 +22,11 @@ async function getconnection() // fonction pour obtenir une connection a la base
 }
 
 app.use(express.urlencoded({ extended: true })); // middleware pour parser les données du formulaire
-app.get('/', async (req, res) => // route pour la page d'accueil
+app.get('/', (req, res) => // route pour la page d'accueil
 {
     res.render('index', { message: null, names: [] });
 });
-app.post('/', async (req, res) => // route pour gérer les soumissions de formulaire
+app.post('/generate', async (req, res) => // route pour gérer les soumissions de formulaire
 {
     let message = null;
     let names = [];
@@ -40,25 +40,24 @@ app.post('/', async (req, res) => // route pour gérer les soumissions de formul
         {
             message = 'communication avec la base de données réussie';
         }
-        else if (action === 'genrate') // générer des noms aléatoires
+        else if (action === 'generate') // générer des noms aléatoires
         {
             const [adjectives] = await
-                connection.execute(
-                    'SELECT adjective FROM adjectives ORDER BY RAND() LIMIT 10');
+                connection.execute('SELECT adjective FROM adjectives ORDER BY RAND() LIMIT 10');
             const [nouns] = await
-                connection.execute(
-                    'SELECT noun FROM nouns ORDER BY RAND() LIMIT 10');
+                connection.execute('SELECT noun FROM nouns ORDER BY RAND() LIMIT 10');
             names = adjectives.map((adj, index) => `${adj.adjective} ${nouns[index].noun}`);
         }
         await connection.end(); // fermer la connection a la base de données
     }
     catch (error) // gérer les erreurs de connexion a la base de données
     {
-        message = ("impossible de communiquer avec la base de données")
+        console.error('Erreur de connexion:', error); // Ajouter des logs pour le débogage
+        message = "Impossibilité de communiquer avec la base de données : " + error.message;
     }
     res.render('index', { message, names });
 });
-app.listen(8080, () => // démarrer le serveur
+app.listen(8080, '0.0.0.0', () => // démarrer le serveur
 {
     console.log(`Server is running on port 8080`) //
 }); 

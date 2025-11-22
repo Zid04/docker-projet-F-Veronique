@@ -3,14 +3,14 @@ USE bandnames; -- Switch to the bandnames database
 CREATE TABLE IF NOT EXISTS -- Create adjectives table
  adjectives (
     id INT AUTO_INCREMENT PRIMARY KEY,
-adjecttive VARCHAR(255) NOT NULL
+adjective VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS -- Create nouns table
  nouns (
     id INT AUTO_INCREMENT PRIMARY KEY,
     noun VARCHAR(255) NOT NULL
 );
-INSERT INTO adjectives (adjecttive) VALUES -- Insert sample adjectives
+INSERT INTO adjectives (adjective) VALUES -- Insert sample adjectives
 ('Funky'),
 ('Groovy'),
 ('Electric'),

@@ -21,15 +21,16 @@
             <% if (names.length> 0) { %>
                 <h2>band names </h2>
                 <ol>
-                    <li>
-                        <%= name %>
-                    </li>
+                    <% names.forEach(function(name) { %>
+                        <li>
+                            <%= name %>
+                        </li>
 
-                    <% } %>
+                        <% }) %>
                 </ol>
                 <% } %>
                     <hr>
-                    <p>phpMyadmin:<a href="http://localhost:8086">http://localhost:8086</a></p>
+                    <p>PhpMyAdmin:<a href="http://localhost:8086">http://localhost:8086</a></p>
 </body>
 
 </html>

@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   web:
     # declaration du service web
@@ -9,15 +10,18 @@ services:
     env_file:
       - .env # charge les variables d'environnement depuis le fichier .env
     ports:
-      - "8085:80" # mappe le port 80 du conteneur au port 8085 de l'hôte
+      - "8085:8080" # mappe le port 80 du conteneur au port 8085 de l'hôte
+    volumes:
+      - ./web:/app # monte le dossier local ./web dans le conteneur à /app
     depends_on:
       - database # indique que le service web dépend du service database
+    command: npm start
     restart: unless-stopped # redémarre automatiquement si le conteneur plante
 
   database:
     # declaration du service database
     image: mysql:latest
-    environment:
+    env_file:
       - .env # charge les variables d'environnement depuis le fichier .env
     volumes:
       - db_data:/var/lib/mysql # persistance des données de la base de données
